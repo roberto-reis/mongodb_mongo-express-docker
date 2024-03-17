@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+    mongo-express:
+        image: mongo-express
+        ports:
+            - 8087:8081
+        environment:
+            ME_CONFIG_MONGODB_SERVER: mongo
+            ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+            ME_CONFIG_BASICAUTH_USERNAME: admin
+            ME_CONFIG_BASICAUTH_PASSWORD: Senh@123
+            ME_CONFIG_MONGODB_AUTH_USERNAME: root
+            ME_CONFIG_MONGODB_AUTH_PASSWORD: root
+        depends_on:
+            - mongo
+        networks:
+            - rede-web-docker
+
+    mongo:
+        image: mongo
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root
+            MONGO_INITDB_DATABASE: project
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./.docker/dbdata:/data/db
+            - ./.docker/mongo:/docker-entrypoint-initdb.d
+        networks:
+            - rede-web-docker
+
+networks:
+    rede-web-docker:
+        external: true
+        name: rede-web-docker
+        driver: bridge
+        
